@@ -1,5 +1,6 @@
 import csv
 import sys
+import datetime
 
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
@@ -59,6 +60,14 @@ def show_hand_with_name(hand_num, player_name):
     hand_str = hand_num_to_str(hand_num)
     print(SHOW_HAND_MESSAGE_FORMAT.format(player_name, hand_str))
 
+def create_file_if_not_exist(file_name):
+    with open(file_name, 'a'):
+        pass
+
+def count_file_lines(file_name):
+    with open(file_name) as f:
+        return len(f.readlines())
+
 def main():
 
     # プレイヤー名を取得
@@ -112,7 +121,28 @@ def main():
             player_1_result = DRAW
             player_2_result = DRAW
 
-    # TODO 結果を保存
+    # 結果を保存
+
+    create_file_if_not_exist(JANKENS_CSV)
+    janken_id = count_file_lines(JANKENS_CSV) + 1
+    played_at = datetime.datetime.now()
+    played_at_str = played_at.strftime('%Y/%m/%d %H:%M:%S')
+    with open(JANKENS_CSV, 'a') as f:
+        writer = csv.writer(f)
+        row = [janken_id, played_at_str]
+        writer.writerow(row)
+
+    create_file_if_not_exist(JANKEN_DETAILS_CSV)
+    janken_details_count = count_file_lines(JANKEN_DETAILS_CSV)
+    with open(JANKEN_DETAILS_CSV, 'a') as f:
+        writer = csv.writer(f)
+        janken_detail_id_1 = janken_details_count + 1
+        janken_detail_id_2 = janken_details_count + 2
+        rows = [
+            [janken_detail_id_1, janken_id, PLAYER_ID_1, player_1_hand, player_1_result],
+            [janken_detail_id_2, janken_id, PLAYER_ID_2, player_2_hand, player_2_result]
+        ]
+        writer.writerows(rows)
 
     # 勝敗の表示
 
