@@ -1,8 +1,14 @@
 # python-janken
 
+## Development Dependencies
+
+- asdf
+
 ## SetUp
 
 ```console
+asdf plugin-add python
+asdf install
 pip install -r requirements.txt
 ```
 
