@@ -6,17 +6,15 @@ from models.result import Result
 from models.player import Player
 from models.janken import Janken
 from models.janken_detail import JankenDetail
+from views.cli.standard_output_view import StandardOutputView
 
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
 
-SCAN_PROPMT_MESSAGE_FORMAT = ''.join(
-    [f'{hand.name}: {hand.value}\n' for hand in Hand]) \
-    + "Please select {} hand:"
-INVALID_INPUT_MESSAGE_FORMAT = 'Invalid input: {}\n'
-SHOW_HAND_MESSAGE_FORMAT = '{} selected {}'
-WINNING_MESSAGE_FORMAT = '{} win !!!'
-DRAW_MESSAGE = 'DRAW !!!'
+SCAN_PROMPT_VIEW_TEMPLATE = 'scan_prompt.j2'
+INVALID_INPUT_VIEW_TEMPLATE = 'invalid_input.j2'
+SHOW_HAND_VIEW_TEMPLATE = 'show_hand.j2'
+RESULT_VIEW_TEMPLATE = 'result.j2'
 
 DATA_DIR = 'data/'
 PLAYERS_CSV = DATA_DIR + 'players.csv'
@@ -36,16 +34,24 @@ def find_player_by_id(player_id):
 
 def scan_hand(player):
     while True:
-        print(SCAN_PROPMT_MESSAGE_FORMAT.format(player.name))
+        StandardOutputView(
+            SCAN_PROMPT_VIEW_TEMPLATE, {
+                'player': player, 'Hand': Hand}).show()
         input_str = input('')
         if input_str in map(lambda h: str(h.value), Hand):
             return Hand(int(input_str))
         else:
-            print(INVALID_INPUT_MESSAGE_FORMAT.format(input_str))
+            StandardOutputView(
+                INVALID_INPUT_VIEW_TEMPLATE, {
+                    'input': input_str}).show()
 
 
 def show_hand_with_name(hand, player):
-    print(SHOW_HAND_MESSAGE_FORMAT.format(player.name, hand.name))
+    params = {
+        'hand': hand,
+        'player': player
+    }
+    StandardOutputView("show_hand.j2", params).show()
 
 
 def create_file_if_not_exist(file_name):
@@ -161,13 +167,13 @@ def main():
     # 勝敗の表示
 
     if (player_1_result == Result.WIN):
-        result_message = WINNING_MESSAGE_FORMAT.format(player_1.name)
+        winner = player_1
     elif (player_2_result == Result.WIN):
-        result_message = WINNING_MESSAGE_FORMAT.format(player_2.name)
+        winner = player_2
     else:
-        result_message = DRAW_MESSAGE
+        winner = None
 
-    print(result_message)
+    StandardOutputView(RESULT_VIEW_TEMPLATE, {'winner': winner}).show()
 
 
 if __name__ == '__main__':
