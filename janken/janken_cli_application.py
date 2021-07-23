@@ -1,8 +1,8 @@
 import csv
 import datetime
 
-from hand import Hand
-from result import Result
+from models.hand import Hand
+from models.result import Result
 
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
