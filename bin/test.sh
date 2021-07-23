@@ -13,3 +13,5 @@ cd "${PROJECT_HOME}"
 python -m pycodestyle janken/janken_cli_application.py
 
 python -m pytest
+
+echo -e "0\n0" | python janken/janken_cli_application.py
