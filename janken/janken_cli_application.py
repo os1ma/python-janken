@@ -3,6 +3,7 @@ import datetime
 
 from models.hand import Hand
 from models.result import Result
+from models.player import Player
 
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
@@ -21,20 +22,19 @@ JANKENS_CSV = DATA_DIR + 'jankens.csv'
 JANKEN_DETAILS_CSV = DATA_DIR + 'janken_details.csv'
 
 
-def find_player_name_by_id(player_id):
+def find_player_by_id(player_id):
     with open(PLAYERS_CSV) as f:
         reader = csv.reader(f)
         for row in reader:
-            id = int(row[0])
-            name = row[1]
-            if id == player_id:
-                return name
+            player = Player(int(row[0]), row[1])
+            if player.player_id == player_id:
+                return player
     raise ValueError(f'Player not exist. player_id = {player_id}')
 
 
-def scan_hand(player_name):
+def scan_hand(player):
     while True:
-        print(SCAN_PROPMT_MESSAGE_FORMAT.format(player_name))
+        print(SCAN_PROPMT_MESSAGE_FORMAT.format(player.name))
         input_str = input('')
         if input_str in map(lambda h: str(h.value), Hand):
             return Hand(int(input_str))
@@ -42,8 +42,8 @@ def scan_hand(player_name):
             print(INVALID_INPUT_MESSAGE_FORMAT.format(input_str))
 
 
-def show_hand_with_name(hand, player_name):
-    print(SHOW_HAND_MESSAGE_FORMAT.format(player_name, hand.name))
+def show_hand_with_name(hand, player):
+    print(SHOW_HAND_MESSAGE_FORMAT.format(player.name, hand.name))
 
 
 def create_file_if_not_exist(file_name):
@@ -60,16 +60,16 @@ def main():
 
     # プレイヤー名を取得
 
-    player_1_name = find_player_name_by_id(PLAYER_ID_1)
-    player_2_name = find_player_name_by_id(PLAYER_ID_2)
+    player_1 = find_player_by_id(PLAYER_ID_1)
+    player_2 = find_player_by_id(PLAYER_ID_2)
 
     # プレイヤーの手を取得
 
-    player_1_hand = scan_hand(player_1_name)
-    player_2_hand = scan_hand(player_2_name)
+    player_1_hand = scan_hand(player_1)
+    player_2_hand = scan_hand(player_2)
 
-    show_hand_with_name(player_1_hand, player_1_name)
-    show_hand_with_name(player_2_hand, player_2_name)
+    show_hand_with_name(player_1_hand, player_1)
+    show_hand_with_name(player_2_hand, player_2)
 
     # 勝敗判定
 
@@ -147,9 +147,9 @@ def main():
     # 勝敗の表示
 
     if (player_1_result == Result.WIN):
-        result_message = WINNING_MESSAGE_FORMAT.format(player_1_name)
+        result_message = WINNING_MESSAGE_FORMAT.format(player_1.name)
     elif (player_2_result == Result.WIN):
-        result_message = WINNING_MESSAGE_FORMAT.format(player_2_name)
+        result_message = WINNING_MESSAGE_FORMAT.format(player_2.name)
     else:
         result_message = DRAW_MESSAGE
 

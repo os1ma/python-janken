@@ -8,4 +8,5 @@ set -o xtrace
 readonly SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
 readonly PROJECT_HOME="${SCRIPT_DIR}/.."
 
-python -m autopep8 --in-place --aggressive --aggressive "${PROJECT_HOME}/janken/janken_cli_application.py"
+find "${PROJECT_HOME}/janken" -type f -name '*.py' \
+ | xargs python -m autopep8 --in-place --aggressive --aggressive

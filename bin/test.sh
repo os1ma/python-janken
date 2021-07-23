@@ -11,7 +11,7 @@ readonly SRC_DIR="${PROJECT_HOME}/janken"
 
 cd "${PROJECT_HOME}"
 
-python -m pycodestyle "${SRC_DIR}/janken_cli_application.py"
+python -m pycodestyle "${SRC_DIR}"
 
 PYTHONPATH="${SRC_DIR}" python -m pytest
 
