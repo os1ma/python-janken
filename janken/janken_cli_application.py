@@ -1,9 +1,11 @@
 import csv
-import datetime
+from datetime import datetime
 
 from models.hand import Hand
 from models.result import Result
 from models.player import Player
+from models.janken import Janken
+from models.janken_detail import JankenDetail
 
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
@@ -54,6 +56,16 @@ def create_file_if_not_exist(file_name):
 def count_file_lines(file_name):
     with open(file_name) as f:
         return len(f.readlines())
+
+
+def janken_detail_to_csv_row(janken_detail):
+    return [
+        janken_detail.janken_detail_id,
+        janken_detail.janken_id,
+        janken_detail.player_id,
+        janken_detail.hand.value,
+        janken_detail.result.value,
+    ]
 
 
 def main():
@@ -112,36 +124,38 @@ def main():
     # 結果を保存
 
     create_file_if_not_exist(JANKENS_CSV)
+
     janken_id = count_file_lines(JANKENS_CSV) + 1
-    played_at = datetime.datetime.now()
-    played_at_str = played_at.strftime('%Y/%m/%d %H:%M:%S')
+    janken = Janken(janken_id, played_at=datetime.now())
+
     with open(JANKENS_CSV, 'a') as f:
         writer = csv.writer(f)
-        row = [janken_id, played_at_str]
+        row = [
+            janken.janken_id,
+            janken.played_at.strftime('%Y/%m/%d %H:%M:%S')
+        ]
         writer.writerow(row)
 
     create_file_if_not_exist(JANKEN_DETAILS_CSV)
+
     janken_details_count = count_file_lines(JANKEN_DETAILS_CSV)
+    janken_detail_1 = JankenDetail(
+        janken_details_count + 1,
+        janken_id,
+        PLAYER_ID_1,
+        player_1_hand,
+        player_1_result)
+    janken_detail_2 = JankenDetail(
+        janken_details_count + 2,
+        janken_id,
+        PLAYER_ID_2,
+        player_2_hand,
+        player_2_result)
+    janken_details = [janken_detail_1, janken_detail_2]
+
     with open(JANKEN_DETAILS_CSV, 'a') as f:
         writer = csv.writer(f)
-        janken_detail_id_1 = janken_details_count + 1
-        janken_detail_id_2 = janken_details_count + 2
-        rows = [
-            [
-                janken_detail_id_1,
-                janken_id,
-                PLAYER_ID_1,
-                player_1_hand.value,
-                player_1_result.value
-            ],
-            [
-                janken_detail_id_2,
-                janken_id,
-                PLAYER_ID_2,
-                player_2_hand.value,
-                player_2_result.value
-            ]
-        ]
+        rows = map(janken_detail_to_csv_row, janken_details)
         writer.writerows(rows)
 
     # 勝敗の表示
