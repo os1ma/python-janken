@@ -3,7 +3,7 @@
 ## SetUp
 
 ```console
-pip install autopep8
+pip install -r requirements.txt
 ```
 
 ## Development
