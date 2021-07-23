@@ -1,5 +1,9 @@
 # python-janken
 
+[![main](https://github.com/os1ma/python-janken/actions/workflows/main.yaml/badge.svg)](https://github.com/os1ma/python-janken/actions/workflows/main.yaml)
+
+[![schedule](https://github.com/os1ma/python-janken/actions/workflows/schedule.yaml/badge.svg)](https://github.com/os1ma/python-janken/actions/workflows/schedule.yaml)
+
 ## Development Dependencies
 
 - asdf
@@ -10,6 +14,7 @@
 asdf plugin-add python
 asdf install
 pip install -r requirements.txt
+ln -s ../../bin/pre-commit .git/hooks/pre-commit
 ```
 
 ## Development
