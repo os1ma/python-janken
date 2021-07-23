@@ -1,4 +1,6 @@
 *.swp
 
+__pycache__
+
 /data/jankens.csv
 /data/janken_details.csv

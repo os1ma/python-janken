@@ -8,4 +8,8 @@ set -o xtrace
 readonly SCRIPT_DIR="$(cd "$(dirname "$0")"; pwd)"
 readonly PROJECT_HOME="${SCRIPT_DIR}/.."
 
-python -m pycodestyle "${PROJECT_HOME}/janken.py"
+cd "${PROJECT_HOME}"
+
+python -m pycodestyle janken/janken_cli_application.py
+
+python -m pytest
