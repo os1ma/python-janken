@@ -1,7 +1,7 @@
 import pytest
 import textwrap
 from io import StringIO
-from janken.janken_cli_application import main
+from janken_cli_application import main
 
 valid_input_test_data = [
     (0, 0, 'STONE', 'STONE', 'DRAW !!!', 2, 2),

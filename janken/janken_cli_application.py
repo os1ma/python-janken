@@ -1,25 +1,15 @@
 import csv
 import datetime
 
+from hand import Hand
+from result import Result
+
 PLAYER_ID_1 = 1
 PLAYER_ID_2 = 2
 
-STONE_NUM = 0
-PAPER_NUM = 1
-SCISSORS_NUM = 2
-
-HANDS = {
-    'STONE': STONE_NUM,
-    'PAPER': PAPER_NUM,
-    'SCISSORS': SCISSORS_NUM
-}
-
-WIN = 0
-LOSE = 1
-DRAW = 2
-
 SCAN_PROPMT_MESSAGE_FORMAT = ''.join(
-    [f'{hand}: {HANDS[hand]}\n' for hand in HANDS]) + "Please select {} hand:"
+    [f'{hand.name}: {hand.value}\n' for hand in Hand]) \
+    + "Please select {} hand:"
 INVALID_INPUT_MESSAGE_FORMAT = 'Invalid input: {}\n'
 SHOW_HAND_MESSAGE_FORMAT = '{} selected {}'
 WINNING_MESSAGE_FORMAT = '{} win !!!'
@@ -46,22 +36,14 @@ def scan_hand(player_name):
     while True:
         print(SCAN_PROPMT_MESSAGE_FORMAT.format(player_name))
         input_str = input('')
-        if input_str in map(str, HANDS.values()):
-            return int(input_str)
+        if input_str in map(lambda h: str(h.value), Hand):
+            return Hand(int(input_str))
         else:
             print(INVALID_INPUT_MESSAGE_FORMAT.format(input_str))
 
 
-def hand_num_to_str(hand_num):
-    for key, value in HANDS.items():
-        if value == hand_num:
-            return key
-    raise ValueError(f'Invalid hand value. hand_num = {hand_num}')
-
-
-def show_hand_with_name(hand_num, player_name):
-    hand_str = hand_num_to_str(hand_num)
-    print(SHOW_HAND_MESSAGE_FORMAT.format(player_name, hand_str))
+def show_hand_with_name(hand, player_name):
+    print(SHOW_HAND_MESSAGE_FORMAT.format(player_name, hand.name))
 
 
 def create_file_if_not_exist(file_name):
@@ -91,41 +73,41 @@ def main():
 
     # 勝敗判定
 
-    if (player_1_hand == STONE_NUM):
+    if (player_1_hand == Hand.STONE):
 
-        if (player_2_hand == STONE_NUM):
-            player_1_result = DRAW
-            player_2_result = DRAW
-        elif (player_2_hand == PAPER_NUM):
-            player_1_result = LOSE
-            player_2_result = WIN
+        if (player_2_hand == Hand.STONE):
+            player_1_result = Result.DRAW
+            player_2_result = Result.DRAW
+        elif (player_2_hand == Hand.PAPER):
+            player_1_result = Result.LOSE
+            player_2_result = Result.WIN
         else:
-            player_1_result = WIN
-            player_2_result = LOSE
+            player_1_result = Result.WIN
+            player_2_result = Result.LOSE
 
-    elif (player_1_hand == PAPER_NUM):
+    elif (player_1_hand == Hand.PAPER):
 
-        if (player_2_hand == STONE_NUM):
-            player_1_result = WIN
-            player_2_result = LOSE
-        elif (player_2_hand == PAPER_NUM):
-            player_1_result = DRAW
-            player_2_result = DRAW
+        if (player_2_hand == Hand.STONE):
+            player_1_result = Result.WIN
+            player_2_result = Result.LOSE
+        elif (player_2_hand == Hand.PAPER):
+            player_1_result = Result.DRAW
+            player_2_result = Result.DRAW
         else:
-            player_1_result = LOSE
-            player_2_result = WIN
+            player_1_result = Result.LOSE
+            player_2_result = Result.WIN
 
     else:
 
-        if (player_2_hand == STONE_NUM):
-            player_1_result = LOSE
-            player_2_result = WIN
-        elif (player_2_hand == PAPER_NUM):
-            player_1_result = WIN
-            player_2_result = LOSE
+        if (player_2_hand == Hand.STONE):
+            player_1_result = Result.LOSE
+            player_2_result = Result.WIN
+        elif (player_2_hand == Hand.PAPER):
+            player_1_result = Result.WIN
+            player_2_result = Result.LOSE
         else:
-            player_1_result = DRAW
-            player_2_result = DRAW
+            player_1_result = Result.DRAW
+            player_2_result = Result.DRAW
 
     # 結果を保存
 
@@ -149,24 +131,24 @@ def main():
                 janken_detail_id_1,
                 janken_id,
                 PLAYER_ID_1,
-                player_1_hand,
-                player_1_result
+                player_1_hand.value,
+                player_1_result.value
             ],
             [
                 janken_detail_id_2,
                 janken_id,
                 PLAYER_ID_2,
-                player_2_hand,
-                player_2_result
+                player_2_hand.value,
+                player_2_result.value
             ]
         ]
         writer.writerows(rows)
 
     # 勝敗の表示
 
-    if (player_1_result == WIN):
+    if (player_1_result == Result.WIN):
         result_message = WINNING_MESSAGE_FORMAT.format(player_1_name)
-    elif (player_2_result == WIN):
+    elif (player_2_result == Result.WIN):
         result_message = WINNING_MESSAGE_FORMAT.format(player_2_name)
     else:
         result_message = DRAW_MESSAGE
