@@ -23,5 +23,5 @@ test
 run
 
 ```console
-python janken.py
+python janken/janken_cli_application.py
 ```
