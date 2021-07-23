@@ -1,0 +1,19 @@
+name: schedule
+
+on:
+  schedule:
+  # 日本時間で毎晩 21 時
+  - cron: '0 12 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - run: |
+        pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - run: ./bin/test.sh
