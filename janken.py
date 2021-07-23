@@ -19,8 +19,8 @@ WIN = 0
 LOSE = 1
 DRAW = 2
 
-SCAN_PROPMT_MESSAGE_FORMAT = ''.join([f'{hand}: {HANDS[hand]}\n' for hand in HANDS]) \
-    + "Please select {} hand:"
+SCAN_PROPMT_MESSAGE_FORMAT = ''.join(
+    [f'{hand}: {HANDS[hand]}\n' for hand in HANDS]) + "Please select {} hand:"
 INVALID_INPUT_MESSAGE_FORMAT = 'Invalid input: {}\n'
 SHOW_HAND_MESSAGE_FORMAT = '{} selected {}'
 WINNING_MESSAGE_FORMAT = '{} win !!!'
@@ -30,6 +30,7 @@ DATA_DIR = 'data/'
 PLAYERS_CSV = DATA_DIR + 'players.csv'
 JANKENS_CSV = DATA_DIR + 'jankens.csv'
 JANKEN_DETAILS_CSV = DATA_DIR + 'janken_details.csv'
+
 
 def find_player_name_by_id(player_id):
     with open(PLAYERS_CSV) as f:
@@ -41,6 +42,7 @@ def find_player_name_by_id(player_id):
                 return name
     raise ValueError(f'Player not exist. player_id = {player_id}')
 
+
 def scan_hand(player_name):
     while True:
         print(SCAN_PROPMT_MESSAGE_FORMAT.format(player_name))
@@ -50,23 +52,28 @@ def scan_hand(player_name):
         else:
             print(INVALID_INPUT_MESSAGE_FORMAT.format(input_str))
 
+
 def hand_num_to_str(hand_num):
     for key, value in HANDS.items():
         if value == hand_num:
             return key
     raise ValueError(f'Invalid hand value. hand_num = {hand_num}')
 
+
 def show_hand_with_name(hand_num, player_name):
     hand_str = hand_num_to_str(hand_num)
     print(SHOW_HAND_MESSAGE_FORMAT.format(player_name, hand_str))
+
 
 def create_file_if_not_exist(file_name):
     with open(file_name, 'a'):
         pass
 
+
 def count_file_lines(file_name):
     with open(file_name) as f:
         return len(f.readlines())
+
 
 def main():
 
@@ -139,8 +146,20 @@ def main():
         janken_detail_id_1 = janken_details_count + 1
         janken_detail_id_2 = janken_details_count + 2
         rows = [
-            [janken_detail_id_1, janken_id, PLAYER_ID_1, player_1_hand, player_1_result],
-            [janken_detail_id_2, janken_id, PLAYER_ID_2, player_2_hand, player_2_result]
+            [
+                janken_detail_id_1,
+                janken_id,
+                PLAYER_ID_1,
+                player_1_hand,
+                player_1_result
+            ],
+            [
+                janken_detail_id_2,
+                janken_id,
+                PLAYER_ID_2,
+                player_2_hand,
+                player_2_result
+            ]
         ]
         writer.writerows(rows)
 
@@ -154,6 +173,7 @@ def main():
         result_message = DRAW_MESSAGE
 
     print(result_message)
+
 
 if __name__ == '__main__':
     main()
