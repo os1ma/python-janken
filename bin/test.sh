@@ -14,7 +14,7 @@ cd "${PROJECT_HOME}"
 # Static Checking
 python -m pycodestyle "${SRC_DIR}"
 cd "${SRC_DIR}"
-python -m mypy --explicit-package-bases --namespace-packages .
+python -m mypy --explicit-package-bases --namespace-packages --strict .
 cd -
 
 # Unit Testing

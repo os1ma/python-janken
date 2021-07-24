@@ -14,7 +14,7 @@ class JankenDetailCsvDao(JankenDetailDao):
         create_file_if_not_exist(JANKEN_DETAILS_CSV)
         return count_file_lines(JANKEN_DETAILS_CSV)
 
-    def insert_all(self, janken_details: List[JankenDetail]):
+    def insert_all(self, janken_details: List[JankenDetail]) -> None:
         create_file_if_not_exist(JANKEN_DETAILS_CSV)
         with open(JANKEN_DETAILS_CSV, 'a') as f:
             writer = csv.writer(f)
