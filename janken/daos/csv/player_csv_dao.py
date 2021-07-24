@@ -1,12 +1,14 @@
 import csv
 from typing import Optional
-from models.player import Player
+
 from daos.csv.csv_dao_utils import DATA_DIR
+from daos.protocols.player_dao import PlayerDao
+from models.player import Player
 
 PLAYERS_CSV = DATA_DIR + 'players.csv'
 
 
-class PlayerCsvDao:
+class PlayerCsvDao(PlayerDao):
     def find_player_by_id(self, player_id: int) -> Optional[Player]:
         with open(PLAYERS_CSV) as f:
             reader = csv.reader(f)

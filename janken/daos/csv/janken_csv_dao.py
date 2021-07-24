@@ -1,12 +1,14 @@
 import csv
-from models.janken import Janken
+
 from daos.csv.csv_dao_utils import DATA_DIR, \
     create_file_if_not_exist, count_file_lines
+from daos.protocols.janken_dao import JankenDao
+from models.janken import Janken
 
 JANKENS_CSV = DATA_DIR + 'jankens.csv'
 
 
-class JankenCsvDao:
+class JankenCsvDao(JankenDao):
     def count(self) -> int:
         create_file_if_not_exist(JANKENS_CSV)
         return count_file_lines(JANKENS_CSV)

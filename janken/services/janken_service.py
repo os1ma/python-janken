@@ -1,9 +1,8 @@
-import csv
 from datetime import datetime
 from typing import Optional
 
-from daos.csv.janken_csv_dao import JankenCsvDao
-from daos.csv.janken_detail_csv_dao import JankenDetailCsvDao
+from daos.protocols.janken_dao import JankenDao
+from daos.protocols.janken_detail_dao import JankenDetailDao
 from models.hand import Hand
 from models.janken import Janken
 from models.janken_detail import JankenDetail
@@ -12,8 +11,8 @@ from models.result import Result
 
 
 class JankenService:
-    def __init__(self, janken_dao: JankenCsvDao,
-                 janken_detail_dao: JankenDetailCsvDao):
+    def __init__(self, janken_dao: JankenDao,
+                 janken_detail_dao: JankenDetailDao):
         self._janken_dao = janken_dao
         self._janken_detail_dao = janken_detail_dao
 
