@@ -7,6 +7,7 @@ from models.result import Result
 from models.player import Player
 from models.janken import Janken
 from models.janken_detail import JankenDetail
+from services.player_service import PlayerService
 from views.cli.standard_output_view import StandardOutputView
 
 PLAYER_ID_1 = 1
@@ -18,18 +19,20 @@ SHOW_HAND_VIEW_TEMPLATE = 'show_hand.j2'
 RESULT_VIEW_TEMPLATE = 'result.j2'
 
 DATA_DIR = 'data/'
-PLAYERS_CSV = DATA_DIR + 'players.csv'
 JANKENS_CSV = DATA_DIR + 'jankens.csv'
 JANKEN_DETAILS_CSV = DATA_DIR + 'janken_details.csv'
 
 
 class JankenCliController:
+    def __init__(self):
+        self.player_service = PlayerService()
+
     def play(self) -> None:
 
         # プレイヤー名を取得
 
-        player_1 = self._find_player_by_id(PLAYER_ID_1)
-        player_2 = self._find_player_by_id(PLAYER_ID_2)
+        player_1 = self.player_service.find_player_by_id(PLAYER_ID_1)
+        player_2 = self.player_service.find_player_by_id(PLAYER_ID_2)
 
         # プレイヤーの手を取得
 
@@ -125,15 +128,6 @@ class JankenCliController:
             winner = None
 
         StandardOutputView(RESULT_VIEW_TEMPLATE, {'winner': winner}).show()
-
-    def _find_player_by_id(self, player_id: int) -> Player:
-        with open(PLAYERS_CSV) as f:
-            reader = csv.reader(f)
-            for row in reader:
-                player = Player(int(row[0]), row[1])
-                if player.player_id == player_id:
-                    return player
-        raise ValueError(f'Player not exist. player_id = {player_id}')
 
     def _scan_hand(self, player: Player) -> Hand:
         while True:
