@@ -1,7 +1,7 @@
 from controllers.cli.janken_cli_controller import JankenCliController
 
 
-def main():
+def main() -> None:
     JankenCliController().play()
 
 

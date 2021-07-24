@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from typing import Optional, List
 
 from models.hand import Hand
 from models.result import Result
@@ -23,7 +24,7 @@ JANKEN_DETAILS_CSV = DATA_DIR + 'janken_details.csv'
 
 
 class JankenCliController:
-    def play(self):
+    def play(self) -> None:
 
         # プレイヤー名を取得
 
@@ -115,6 +116,7 @@ class JankenCliController:
 
         # 勝敗の表示
 
+        winner: Optional[Player]
         if (player_1_result == Result.WIN):
             winner = player_1
         elif (player_2_result == Result.WIN):
@@ -124,7 +126,7 @@ class JankenCliController:
 
         StandardOutputView(RESULT_VIEW_TEMPLATE, {'winner': winner}).show()
 
-    def _find_player_by_id(self, player_id):
+    def _find_player_by_id(self, player_id: int) -> Player:
         with open(PLAYERS_CSV) as f:
             reader = csv.reader(f)
             for row in reader:
@@ -133,7 +135,7 @@ class JankenCliController:
                     return player
         raise ValueError(f'Player not exist. player_id = {player_id}')
 
-    def _scan_hand(self, player):
+    def _scan_hand(self, player: Player) -> Hand:
         while True:
             StandardOutputView(
                 SCAN_PROMPT_VIEW_TEMPLATE, {
@@ -146,26 +148,28 @@ class JankenCliController:
                     INVALID_INPUT_VIEW_TEMPLATE, {
                         'input': input_str}).show()
 
-    def _show_hand_with_name(self, hand, player):
+    def _show_hand_with_name(self, hand: Hand, player: Player) -> None:
         params = {
             'hand': hand,
             'player': player
         }
         StandardOutputView("show_hand.j2", params).show()
 
-    def _create_file_if_not_exist(self, file_name):
+    def _create_file_if_not_exist(self, file_name: str) -> None:
         with open(file_name, 'a'):
             pass
 
-    def _count_file_lines(self, file_name):
+    def _count_file_lines(self, file_name: str) -> int:
         with open(file_name) as f:
             return len(f.readlines())
 
-    def _janken_detail_to_csv_row(self, janken_detail):
+    def _janken_detail_to_csv_row(
+            self,
+            janken_detail: JankenDetail) -> List[str]:
         return [
-            janken_detail.janken_detail_id,
-            janken_detail.janken_id,
-            janken_detail.player_id,
-            janken_detail.hand.value,
-            janken_detail.result.value,
+            str(janken_detail.janken_detail_id),
+            str(janken_detail.janken_id),
+            str(janken_detail.player_id),
+            str(janken_detail.hand.value),
+            str(janken_detail.result.value),
         ]
