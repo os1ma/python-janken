@@ -1,6 +1,8 @@
 *.swp
+.idea
 
 __pycache__
+venv
 
 /data/jankens.csv
 /data/janken_details.csv

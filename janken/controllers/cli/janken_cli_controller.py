@@ -1,12 +1,7 @@
-from typing import List
-
 from models.hand import Hand
-from models.result import Result
 from models.player import Player
-from models.janken import Janken
-from models.janken_detail import JankenDetail
-from services.player_service import PlayerService
 from services.janken_service import JankenService
+from services.player_service import PlayerService
 from views.cli.standard_output_view import StandardOutputView
 
 PLAYER_ID_1 = 1
@@ -16,6 +11,8 @@ SCAN_PROMPT_VIEW_TEMPLATE = 'scan_prompt.j2'
 INVALID_INPUT_VIEW_TEMPLATE = 'invalid_input.j2'
 SHOW_HAND_VIEW_TEMPLATE = 'show_hand.j2'
 RESULT_VIEW_TEMPLATE = 'result.j2'
+
+PLAYER_NOT_FOUND_ERROR_MESSAGE_FORMAT = 'Player not found. player_id = {}'
 
 
 class JankenCliController:
@@ -29,7 +26,13 @@ class JankenCliController:
     def play(self) -> None:
 
         player_1 = self.player_service.find_player_by_id(PLAYER_ID_1)
+        if player_1 is None:
+            raise ValueError(
+                PLAYER_NOT_FOUND_ERROR_MESSAGE_FORMAT.format(PLAYER_ID_1))
         player_2 = self.player_service.find_player_by_id(PLAYER_ID_2)
+        if player_2 is None:
+            raise ValueError(
+                PLAYER_NOT_FOUND_ERROR_MESSAGE_FORMAT.format(PLAYER_ID_2))
 
         player_1_hand = self._scan_hand(player_1)
         player_2_hand = self._scan_hand(player_2)
